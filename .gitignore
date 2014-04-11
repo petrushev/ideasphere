@@ -1,0 +1,8 @@
+*.pyc
+*.pyo
+.settings
+.directory
+.project
+.pydevproject
+
+additional_env.py
