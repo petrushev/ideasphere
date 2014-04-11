@@ -89,14 +89,14 @@ class Application(object):
                                      'cdn': CDN})
 
     def get_response(self, environ):
-        urls = self.url_map.bind_to_environ(environ)
 
         session = Session()
-
         request = Request(environ)
         request.session = session
         request.app = self
 
+        # dispatch
+        urls = self.url_map.bind_to_environ(environ)
         try:
             endpoint, args = urls.match()
         except HTTPException, exc:
@@ -105,19 +105,25 @@ class Application(object):
         else:
             raw_response = endpoint(request, **args)
 
-        if type(raw_response) is not Response:
+        # prepare response object
+        try:
+            raw_response[0]
+        except TypeError:
+            response = raw_response
+        else:
             view = {'user': request.logged_user(),
                     'path': request.path}
             view.update(raw_response[0])
             raw_response = (view,) + raw_response[1:]
+            response = prepare_response(self.tpl_env, raw_response)
 
-        response = prepare_response(self.tpl_env, raw_response)
-
+        # db session: commit or rollback
         if request.should_rollback:
             session.rollback()
         else:
             session.commit()
 
+        # web session
         if request.client_session.should_save:
             session_data = request.client_session.serialize()
             response.set_cookie('session_data', session_data,
