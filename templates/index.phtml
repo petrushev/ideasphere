@@ -1,5 +1,9 @@
-{% extends 'base.phtml' %}
+{% extends 'default.phtml' %}
 
-{% block body %}
-<h1>Hello world!</h1>
+  {% block head_rest %}
+    <meta name="google-site-verification" content="{{google_site_verification}}" />
+  {% endblock %}
+
+{% block container %}
+  Hello {{user.alias}}
 {% endblock %}

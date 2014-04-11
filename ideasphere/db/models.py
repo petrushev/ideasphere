@@ -13,18 +13,19 @@ class User(BaseModel):
             u = User.load(session, service_id = profile_id, service = 'gmail')
 
         except NoResultFound:
-            u = User(nickname = profile_id, service = 'gmail')
+            u = User(service_id = profile_id, service = 'gmail')
             session.add(u)
             session.flush()
 
         u.fullname = fullname
+        u.display_name = fullname
         u.email = email
 
         return u
 
     @property
     def alias(self):
-        if self.display_name is not Null:
+        if self.display_name is not None:
             return self.display_name
 
         if self.service == 'gmail':

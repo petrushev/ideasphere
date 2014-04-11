@@ -2,24 +2,37 @@
 <html lang="en">
 
 <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">  <meta name="description" content="{% block meta_desc %}{% endblock %}" />
+
   <title>{% block title %}{% endblock %}</title>
   {% block styles  %}
       <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
       <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+
+      <link rel="stylesheet" href="{{cdn}}/css/bootstrap.min.css">
+      <link rel="stylesheet" href="{{cdn}}/css/bootstrap-theme.min.css">
+      <link rel="stylesheet" href="{{cdn}}/css/theme.css">
+
   {% endblock %}
 
   {% block scripts %}
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" ></script>
+
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="{{cdn}}/css/jquery-ui-1.9.cupertino.min.css" />
     <style>
       .ui-widget {font-size: 80%}
     </style>
+
+      <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
   {% endblock %}
 
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <meta name="description" content="{% block meta_desc %}{% endblock %}" />
-  <meta name="keywords" content="{% block meta_keywords %}{% endblock %}" />
+    <meta name="keywords" content="{% block meta_keywords %}{% endblock %}" />
 
   {% block head_rest %}{% endblock %}
 </head>

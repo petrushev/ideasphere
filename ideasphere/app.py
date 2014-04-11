@@ -13,12 +13,14 @@ from jinja2.environment import Environment
 from jinja2.loaders import FileSystemLoader
 from jinja2.bccache import FileSystemBytecodeCache
 
-
-from ideasphere.controllers import index
-from ideasphere.db.mappers import Session
-from ideasphere.routes import url_map
+from sqlalchemy.orm.exc import NoResultFound
 
 from ideasphere import project_path
+from ideasphere.controllers import index
+from ideasphere.db.mappers import Session
+from ideasphere.db.models import User
+from ideasphere.routes import url_map
+
 
 CDN = environ['CDN']
 COOKIE_SECRET = environ['COOKIE_SECRET']
@@ -39,6 +41,15 @@ class Request(BaseRequest):
             return JsonSecureCookie(secret_key=COOKIE_SECRET)
 
         return JsonSecureCookie.unserialize(data, COOKIE_SECRET)
+
+    def logged_user(self):
+        try:
+            service, service_id = self.client_session['login']
+            return User.load(self.session,
+                             service=service, service_id=service_id)
+
+        except (KeyError, NoResultFound, ValueError):
+            return None
 
 def prepare_response(tpl_env, raw_response):
     if type(raw_response) is Response:
@@ -80,22 +91,26 @@ class Application(object):
     def get_response(self, environ):
         urls = self.url_map.bind_to_environ(environ)
 
-        request = Request(environ)
-
-        try:
-            endpoint, args = urls.match()
-
-        except HTTPException, exc:
-            sys.stderr.write('Routing error:\n    %s\n' % str(exc))
-            raw_response = index.notfound(request)
-            return prepare_response(self.tpl_env, raw_response)
-
         session = Session()
 
+        request = Request(environ)
         request.session = session
         request.app = self
 
-        raw_response = endpoint(request, **args)
+        try:
+            endpoint, args = urls.match()
+        except HTTPException, exc:
+            sys.stderr.write('Routing error:\n    %s\n' % str(exc))
+            raw_response = index.notfound(request)
+        else:
+            raw_response = endpoint(request, **args)
+
+        if type(raw_response) is not Response:
+            view = {'user': request.logged_user(),
+                    'path': request.path}
+            view.update(raw_response[0])
+            raw_response = (view,) + raw_response[1:]
+
         response = prepare_response(self.tpl_env, raw_response)
 
         if request.should_rollback:
@@ -107,7 +122,6 @@ class Application(object):
             session_data = request.client_session.serialize()
             response.set_cookie('session_data', session_data,
                                 httponly=True)
-
         return response
 
 
