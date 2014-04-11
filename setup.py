@@ -7,6 +7,9 @@ setup(name='Ideasphere',
       author_email='b.petrushev@gmail.com',
       url='http://www.python.org/sigs/distutils-sig/',
       install_requires=['SQLAlchemy',
-                        'psygopg2',
+                        'psycopg2',
                         'Jinja2',
-                        'Werkzeug'])
+                        'Werkzeug',
+                        'lxml',
+                        'cssselect',
+                        'requests'])
