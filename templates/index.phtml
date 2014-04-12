@@ -5,5 +5,18 @@
   {% endblock %}
 
 {% block container %}
-  Hello {{user.alias}}
+	<div class="panel panel-success">
+	    <div class="panel-heading">
+	      <h2 class="panel-title">Missions</h2>
+	    </div>
+	    <div class="panel-body">
+		  {% for m in missions %}
+		    <h3><a href="/mission/{{m.id}}" >{{m.title|e}}</a></h3>
+		    <div>
+		      {{m.description|e}}
+		    </div>
+		    
+		  {% endfor %}
+	    </div>
+    </div>
 {% endblock %}

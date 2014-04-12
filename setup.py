@@ -12,4 +12,5 @@ setup(name='Ideasphere',
                         'Werkzeug',
                         'lxml',
                         'cssselect',
-                        'requests'])
+                        'requests',
+                        'wtforms'])

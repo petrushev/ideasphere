@@ -18,3 +18,23 @@ engine = create_engine(conn_str)
 #listen(engine, 'connect', connection_start_hook)
 
 mappers, tables, Session = reflect(engine, models)
+
+mappers['Mission'].add_properties({
+    'problems': relationship(models.Problem,
+                             order_by=models.Problem.created.desc(),
+                             backref='mission')})
+
+mappers['Problem'].add_properties({
+    'proposals': relationship(models.Proposal,
+                              order_by=models.Proposal.submited.desc(),
+                              backref='problem')})
+
+mappers['Proposal'].add_properties({
+    'submiter': relationship(models.User)
+})
+
+mappers['Vote'].add_properties({
+    'voter': relationship(models.User),
+    'proposal': relationship(models.Proposal,
+                             backref='votes')
+})

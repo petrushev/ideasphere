@@ -16,7 +16,8 @@ G = {
 }
 
 def logout(request):
-    del request.client_session['login']
+    if 'login' in request.client_session:
+        del request.client_session['login']
     return redirect('/')
 
 def g_request(request, original_url):
@@ -54,11 +55,12 @@ def g_callback(request):
     q = requests.get('https://www.googleapis.com/oauth2/v1/userinfo?access_token=' + access_token)
     content = loads(q.content)
 
-    profile_id = content['id']
+    service_id = content['id']
 
     # save userinfo by id
-    User.save_g_data(request.session, profile_id, fullname=content['name'], email=content['email'])
+    u = User.save_g_data(request.session, service_id, fullname=content['name'], email=content['email'])
+    u.img_url = content.get('picture')
 
-    request.client_session['login'] = ['gmail', profile_id]
+    request.client_session['login'] = ['gmail', service_id]
 
     return redirect('/' + original_url)

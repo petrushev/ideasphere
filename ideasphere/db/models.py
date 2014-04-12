@@ -1,3 +1,6 @@
+from json import loads, dumps
+
+from werkzeug.urls import url_quote
 from sqlalchemy.sql.expression import func, and_, not_
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm.util import aliased
@@ -40,3 +43,54 @@ class User(BaseModel):
     @property
     def home_url(self):
         raise NotImplementedError, ' for service ' + self.service
+
+def json_property(json, field):
+    if json is None:
+        return None
+    try:
+        json = loads(json)
+        return json.get(field)
+    except ValueError:
+        return None
+
+def prepare_json_property(existing, field, value):
+    if existing is None:
+        json = {}
+    else:
+        try:
+            json = loads(existing)
+        except ValueError:
+            json = {}
+
+    json[field] = value
+    return dumps(json)
+
+class Mission(BaseModel):
+
+    @property
+    def description(self):
+        return json_property(self.meta, 'description')
+
+    @description.setter
+    def description(self, value):
+        self.meta = prepare_json_property(self.meta, 'description', value)
+
+
+class Problem(BaseModel):
+
+    @property
+    def description(self):
+        return json_property(self.meta, 'description')
+
+    @description.setter
+    def description(self, value):
+        self.meta = prepare_json_property(self.meta, 'description', value)
+
+class Proposal(BaseModel):
+    
+    def score(self):
+        return sum([1 if vote.is_plus else -1
+                    for vote in self.votes])
+
+class Vote(BaseModel):
+    pass
