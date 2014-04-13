@@ -1,11 +1,12 @@
 from datetime import datetime
 from functools import wraps
 
+from lxml.html import fromstring
 from werkzeug.utils import redirect
 from sqlalchemy.orm.exc import NoResultFound
 
 from ideasphere.forms import ProposalForm
-from ideasphere.db.models import Problem, Proposal, Vote
+from ideasphere.db.models import Problem, Proposal, Vote, Comment, User
 from ideasphere.utils import return_json
 
 def user(fc):
@@ -75,3 +76,32 @@ def vote(request, user, proposal_id, vote_value):
     vote.is_plus = (not vote_value == 0)
 
     return return_json({})
+
+
+@user
+def post_comment(request, user):
+    proposal_id = int(request.form['proposal_id'])
+    try:
+        proposal = Proposal.load(request.session, id=proposal_id)
+    except NoResultFound:
+        return return_json({})
+
+    content = request.form['content']
+    content = fromstring(content).text.replace('\n', ' ')
+    page_id = 'proposal/%d' % proposal.id
+
+    comment = Comment(time=datetime.utcnow(), user=user,
+                      page_id=page_id, content=content)
+    request.session.add(comment)
+    return return_json({'status': 'ok',
+                        'content': 'content',
+                        'user': {'id': user.id,
+                                 'alias': user.alias}})
+
+def profile(request, user_id):
+    try:
+        user = User.load(request.session, id=user_id)
+    except NoResultFound:
+        return
+
+    return {'show_user': user}, 'profile.phtml'

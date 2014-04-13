@@ -1,5 +1,14 @@
 {% extends 'base.phtml' %}
 
+{% block styles %}
+  {{ super() }}
+  <style>
+   textarea { margin: 0px; width: 313px; height: 86px; }
+  </style>
+{% endblock %}
+
+
+
 {% block body %}
 
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">

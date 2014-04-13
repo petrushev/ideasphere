@@ -1,0 +1,26 @@
+{% extends 'default.phtml' %}
+
+{% block container %}
+    <div class="panel panel-success">
+	    <div class="panel-heading">
+	      <h2 class="panel-title">
+	        {% if show_user.img_url %}
+                <img src="{{show_user.img_url}}" width="72"/>
+	        {% endif %}
+	        {{show_user.alias|e}}</h2>
+	    </div>
+
+	    <div class="panel-body">
+	      {% for prop in show_user.proposals.limit(20).all() %}
+	        <div class="alert alert-warning" >
+	          problem: {{prop.problem.title|e}} on {{prop.problem.mission.title|e}} mission<br/>
+	          proposal:
+	             <a href="/proposal/{{prop.id}}" ><b>{{prop.title|e}}</b></a>
+	             on {{prop.submited.strftime('%B %d, %Y')}} <br/>
+	          <div>{{prop.description|e}}</div>
+	        </div>
+	      {% endfor %}
+	    </div>
+
+    </div>
+{% endblock %}

@@ -2,58 +2,68 @@
 
 {% block container %}
 
-	<div class="panel panel-success">
-	    <div class="panel-heading">
-	      <h3 class="panel-title">Submit proposal for solution</h3>
-	    </div>
-	    <div class="panel-body">
-	      <div class="alert alert-info" >Mission: 
-	       <a href="/mission/{{problem.mission_id}}" ><b>{{problem.mission.title|e}}</b></a>
-	      </div>
-	      <b>Problem: {{problem.title|e}} </b> <br/>
-	      <div>
-	        {{problem.description|e}} 
-	      </div>
-	      <hr/>
-	      
-	      {# proposals #}
-	      <div id="proposals">
-	      {% for prop in problem.proposals %}
-	        <div>
-	          <b>{{prop.score()}} votes</b>
-  	            <a href="/proposal/{{prop.id}}" >{{ prop.title|e}}</a> <br/>
-  	            by <a href="/user/{{prop.user_id}}" >{{prop.submiter.alias|e}}</a>
-  	            on {{prop.submited.strftime('%B %d, %Y')}} <br/>
-	          {{prop.description|e}}
-	        </div> <br/>
-	      {% endfor %}
-	      </div>
-	      
-	      
-	      {% if user %}
-		      <hr/>
-		      <b>Your solution bellow: </b><br/>
-			  <form method="post" action='/submit' enctype="multipart/form-data">
-			    <div style="display:none;" >{{form.problem_id}}</div>
-			    {{form.title.label}}: {{form.title}} <br/>
-			    {{form.description.label}}:<br/>
-			    {{form.description }} <br/>
-			    {{form.img.label}}: {{form.img}} <br/>
-			    {{form.model.label}}: {{form.model}} <br/>
-			    {{form.submit(class="btn btn-default")}}
-			  </form>
-		    
-	          {% if error %}
-		      <div class="alert alert-danger" >
-		        {{error}}
-		      </div>
-		      
-		      {% endif %}
-	      
-	      {% else %}
-	         Login to submit your proposal 
-	      {% endif %}
-	    </div>
+    <div class="panel panel-success">
+        <div class="panel-heading">
+          <h3 class="panel-title">Submit proposal for solution</h3>
+        </div>
+        <div class="panel-body">
+          <div class="alert alert-info" >Mission:
+           <a href="/mission/{{problem.mission_id}}" ><b>{{problem.mission.title|e}}</b></a>
+          </div>
+          <b>Problem: {{problem.title|e}} </b> <br/>
+          <div>
+            {{problem.description|e}}
+          </div>
+          <hr/>
+
+          {# proposals #}
+          <div id="proposals" >
+          {% for prop in problem.proposals %}
+            <div>
+              <b>{{prop.score()}} votes</b>
+                  <a href="/proposal/{{prop.id}}" >{{ prop.title|e}}</a> <br/>
+                  by <a href="/user/{{prop.user_id}}" >{{prop.submiter.alias|e}}</a>
+                  on {{prop.submited.strftime('%B %d, %Y')}} <br/>
+              {{prop.description|e}}
+            </div> <br/>
+          {% endfor %}
+          </div>
+
+          {% if user %}
+
+            <div class="panel panel-warning" >
+            <div class="panel-heading">
+              <b class="panel-title">Submit your proposal</b>
+            </div>
+
+            <div class="panel-body">
+
+              <b>Your solution bellow: </b><br/>
+
+              <div class="row-fluid span6 ">
+              <form method="post" action='/submit' enctype="multipart/form-data">
+                <div style="display:none;" >{{form.problem_id}}</div>
+                {{form.title.label}}: {{form.title}} <br/>
+                {{form.description.label}}:<br/>
+                {{form.description(class="input-block-level") }} <br/>
+                {{form.img.label}}: {{form.img}} <br/>
+                {{form.model.label}}: {{form.model}} <br/>
+                {{form.submit(class="btn btn-default")}}
+              </form>
+              </div>
+
+              {% if error %}
+              <div class="alert alert-danger" >
+                {{error}}
+              </div>
+              {% endif %}
+
+            </div>
+          </div>
+          {% else %}
+             Login to submit your proposal
+          {% endif %}
+        </div>
      </div>
 
 {% endblock %}

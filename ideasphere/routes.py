@@ -1,4 +1,4 @@
-from werkzeug.routing import Map, Rule
+from werkzeug.routing import Map, Rule, EndpointPrefix
 
 from ideasphere.controllers import index, login, admin, mission, user
 
@@ -16,7 +16,9 @@ routes = [
     Rule('/problem/<int:problem_id>/submit', endpoint=user.submit_form, methods=['GET']),
     Rule('/submit', endpoint=user.save_proposal, methods=['POST']),
     Rule('/proposal/<int:proposal_id>', endpoint=mission.proposal, methods=['GET']),
-    Rule('/vote/<int:proposal_id>/<int:vote_value>', endpoint=user.vote, methods=['GET'])
+    Rule('/vote/<int:proposal_id>/<int:vote_value>', endpoint=user.vote, methods=['GET']),
+    Rule('/user/postcomment', endpoint=user.post_comment, methods=['POST']),
+    Rule('/user/<int:user_id>', endpoint=user.profile, methods=['GET'])
 ]
 
 url_map = Map(routes, strict_slashes = False)

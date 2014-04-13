@@ -5,62 +5,115 @@
   <script>
     var proposal_id={{proposal.id}};
   </script>
-  
 {% endblock %}
 
 {% block container %}
-	<div class="panel panel-success">
-	    <div class="panel-heading">
-	      <h2 class="panel-title">mission:
-	         <a href="/mission/{{problem.mission_id}}" >{{problem.mission.title|e}}</a></h2>
-	    </div>
-	    <div class="panel-body">
-	      problem:
-	      <h3>{{problem.title|e}}</h3>
-	      <div>{{problem.description|e}}</div>
-	      <hr/>
-	      <div>
-	        <b>{{proposal.score() }} votes</b>
-  	        proposal by: <a href="/profile/{{proposal.user_id}}" >{{proposal.submiter.alias|e}}</a>
-	        posted on {{proposal.submited.strftime('%B %d, %Y') }}
-	      </div>
-	      <div>
-	        <b>{{proposal.title|e}}</b> <br/>
-	        {{proposal.description|e}}
-	      </div>
-	      <img  src="data:image/png;base64,{{img64}}"
-	          class="ui-resizable" style="width: 400px;" />
-	          
-	      {% if user %}
-	      {# voting part #}
-	        {% if user.id != proposal.user_id %}
-	        <div id="voting" >
-  	          <button class="btn btn-sm {% if vote is not none and vote.is_plus %}btn-warning{%else%}btn-primary{% endif %} " 
-  	              id="vote_up" >vote up!</button>
-  	          <button class="btn btn-sm {% if vote is not none and not vote.is_plus %}btn-warning{%else%}btn-primary{% endif %} "
-  	              id="vote_down" >vote down</button>
-  	        </div>
-  	        
-  	        <script>
-  	        function vote(val) {
-  	          $.get('/vote/'+proposal_id+'/'+val, {}, function(){});
-  	        }
-  	        
-  	        $('#vote_up').click(function(){
-  	            vote(1);
-  	            $("button[id^=vote_down]").removeClass("btn-warning").addClass("btn-primary");
-  	            $("button[id^=vote_up]").removeClass("btn-primary").addClass("btn-warning");
-  	        });
-  	        $('#vote_down').click(function(){
-  	            vote(0);
-  	            $("button[id^=vote_up]").removeClass("btn-warning").addClass("btn-primary");
-  	            $("button[id^=vote_down]").removeClass("btn-primary").addClass("btn-warning");
-  	        });
-  	        </script>
-	        {% endif %}
-	      
-	      {% endif %}
-	    </div>
+    <div class="panel panel-success">
+        <div class="panel-heading">
+          <h2 class="panel-title">mission:
+             <a href="/mission/{{problem.mission_id}}" >{{problem.mission.title|e}}</a></h2>
+        </div>
+        <div class="panel-body">
+          problem:
+          <h3>{{problem.title|e}}</h3>
+          <div>{{problem.description|e}}</div>
+          <hr/>
+
+            <div class="panel panel-warning" >
+
+            <div class="panel-heading">
+              <b class="panel-title">proposal: {{proposal.title|e}} </b>
+            </div>
+
+            <div class="panel-body">
+
+            <b>{{proposal.score() }} votes</b>
+              proposal by: <a href="/user/{{proposal.user_id}}" >{{proposal.submiter.alias|e}}</a>
+              posted on {{proposal.submited.strftime('%B %d, %Y') }} <br/>
+
+            {{proposal.description|e}} <br/>
+
+              <img  src="data:image/png;base64,{{img64}}"
+                  class="ui-resizable" style="width: 400px;" />
+
+              {% if user %}
+                {# voting part #}
+                {% if user.id != proposal.user_id %}
+                <div id="voting" >
+                    <button class="btn btn-sm
+                        {% if vote is not none and vote.is_plus %}btn-warning{%else%}btn-primary{% endif %} "
+                        id="vote_up" >vote up!</button>
+                    <button class="btn btn-sm
+                        {% if vote is not none and not vote.is_plus %}btn-warning{%else%}btn-primary{% endif %} "
+                        id="vote_down" >vote down</button>
+                  </div>
+
+                  <script>
+                  function vote(val) {
+                    $.get('/vote/'+proposal_id+'/'+val, {}, function(){});
+                  }
+
+                  $('#vote_up').click(function(){
+                      vote(1);
+                      $("button[id^=vote_down]").removeClass("btn-warning").addClass("btn-primary");
+                      $("button[id^=vote_up]").removeClass("btn-primary").addClass("btn-warning");
+                  });
+                  $('#vote_down').click(function(){
+                      vote(0);
+                      $("button[id^=vote_up]").removeClass("btn-warning").addClass("btn-primary");
+                      $("button[id^=vote_down]").removeClass("btn-primary").addClass("btn-warning");
+                  });
+                  </script>
+                {% endif %} {# end if user is not poster #}
+
+              {% endif %} {# end if user #}
+
+            </div>
+          </div>
+
+          <div class="panel panel-warning" >
+            <div class="panel-heading">
+              <b class="panel-title">Comments</b>
+            </div>
+
+            <div class="panel-body">
+              {% if user %}
+                <div>
+                  <b>Comment</b><br/>
+                  <textarea id="post_comment" ></textarea> <br/>
+                  <button id="submit_comment" class="btn btn-primary " >Post</button>
+                </div> <br/>
+                <script>
+                  $("button#submit_comment").click(function(){
+                    var content = $("textarea#post_comment").val();
+                    $.post('/user/postcomment', {content: content, proposal_id: proposal_id},
+                      function(json){
+                        if (json.status=='ok') {
+                          var html = "<div>"+json.content+"</div>";
+                          var comments_div = $("div#comments");
+                          comments_div.html(html + comments_div.html());
+                        }
+                      },
+                      'json'
+                    );
+                  });
+                </script>
+              {% endif %}
+
+              <div id="comments" >
+                {% for c in proposal.comments %}
+                  <div>
+                    <button id="flag_comment_{{c.id}}" title="flag this comment"
+                      class="btn btn-xs btn-warning" >!</button>
+                    {{c.content|e}} - <a href="/user/{{c.user_id}}" >{{c.user.alias|e}}</a> on {{c.time.strftime('%B %d, %Y %H:%M')}}
+                  </div>
+                {% endfor %}
+              </div>
+
+            </div>
+          </div>
+
+        </div>
     </div>
 
 {% endblock  %}

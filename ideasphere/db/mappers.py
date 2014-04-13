@@ -30,11 +30,18 @@ mappers['Problem'].add_properties({
                               backref='problem')})
 
 mappers['Proposal'].add_properties({
-    'submiter': relationship(models.User)
+    'submiter': relationship(models.User, lazy='joined',
+                             backref=backref('proposals',
+                                             order_by=models.Proposal.submited.desc(),
+                                             lazy='dynamic'))
 })
 
 mappers['Vote'].add_properties({
-    'voter': relationship(models.User),
-    'proposal': relationship(models.Proposal,
+    'voter': relationship(models.User, lazy='joined'),
+    'proposal': relationship(models.Proposal, lazy='joined',
                              backref='votes')
+})
+
+mappers['Comment'].add_properties({
+    'user': relationship(models.User, lazy='joined')
 })

@@ -92,5 +92,17 @@ class Proposal(BaseModel):
         return sum([1 if vote.is_plus else -1
                     for vote in self.votes])
 
+    @property
+    def comments(self):
+        if not hasattr(self, 'id') or self.id is None:
+            return []
+        page_id = 'proposal/%d' % self.id
+        return self.session.query(Comment)\
+                   .filter(Comment.page_id == page_id)\
+                   .order_by(Comment.time.desc()).all()
+
 class Vote(BaseModel):
+    pass
+
+class Comment(BaseModel):
     pass
