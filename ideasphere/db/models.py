@@ -16,7 +16,23 @@ class User(BaseModel):
             u = User.load(session, service_id = profile_id, service = 'gmail')
 
         except NoResultFound:
-            u = User(service_id = profile_id, service = 'gmail')
+            u = User(service_id=profile_id, service='gmail', is_admin=True)
+            session.add(u)
+            session.flush()
+
+        u.fullname = fullname
+        u.display_name = fullname
+        u.email = email
+
+        return u
+
+    @staticmethod
+    def save_fb_data(session, service_id, fullname, email):
+        try:
+            u = User.load(session, service_id=service_id, service='fb')
+
+        except NoResultFound:
+            u = User(service_id=service_id, service='fb', is_admin=True)
             session.add(u)
             session.flush()
 
