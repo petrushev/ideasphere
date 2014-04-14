@@ -94,7 +94,7 @@ def post_comment(request, user):
                       page_id=page_id, content=content)
     request.session.add(comment)
     return return_json({'status': 'ok',
-                        'content': 'content',
+                        'content': content,
                         'user': {'id': user.id,
                                  'alias': user.alias}})
 
