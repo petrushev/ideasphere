@@ -102,6 +102,6 @@ def profile(request, user_id):
     try:
         user = User.load(request.session, id=user_id)
     except NoResultFound:
-        return
+        return {}, 'notfound.phtml', 404
 
     return {'show_user': user}, 'profile.phtml'
