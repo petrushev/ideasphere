@@ -2,32 +2,41 @@
 
 {% block container %}
     <div class="panel panel-success">
-	    <div class="panel-heading">
-	      <h2 class="panel-title">{{mission.title|e}}</h2>
-	    </div>
-	    
-	    <div class="panel-body">
-	       <b>Since: {{mission.created.strftime("%B %d, %Y")}}</b> <br/>
-	       {{mission.description|e}}
-	       
-	       <hr/>
-	       
-	       <h4>Problems</h4>
-	       {% for p in mission.problems %}
-	         <div>
-	           <a href="/problem/{{p.id}}/submit" ><b>{{p.title|e}}</b></a>
-	           (since: {{p.created.strftime("%B %d, %Y")}}) <br/>
-	           {{p.description|e}} <br/>
-	           posted proposals: {{p.proposals|count}}
-	           {% if user %}
+        <div class="panel-heading">
+          <h2 class="panel-title">{{mission.title|e}}</h2>
+        </div>
+
+        <div class="panel-body">
+           <div >
+              <b>Since: {{mission.created.strftime("%B %d, %Y")}}</b> <br/>
+              {{mission.description|e}}
+           </div>
+           {% if user.is_admin %}
+             <br/>
+           <div ">
+              <a href="/mission/{{mission.id}}/addproblem" >
+                <button class="btn btn-sm btn-primary" >Add problem</button></a>
+           </div>
+           {% endif %}
+
+           <hr/>
+
+           <h4>Problems</h4>
+           {% for p in mission.problems %}
+             <div>
+               <a href="/problem/{{p.id}}/submit" ><b>{{p.title|e}}</b></a>
+               (since: {{p.created.strftime("%B %d, %Y")}}) <br/>
+               {{p.description|e}} <br/>
+               posted proposals: {{p.proposals|count}}
+               {% if user %}
                  <a href="/problem/{{p.id}}/submit" ><button class="btn btn-sm btn-primary">View and submit your own</button></a>
                {% else %}
                  <a href="/problem/{{p.id}}/submit" ><button class="btn btn-sm btn-primary">View</button></a>
                  Login to post your own
                {% endif %}
-	         </div> <br/>
-	       {% endfor %}
-	    </div>
-	    
+             </div> <br/>
+           {% endfor %}
+        </div>
+
     </div>
 {% endblock %}

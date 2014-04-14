@@ -7,8 +7,6 @@
   </style>
 {% endblock %}
 
-
-
 {% block body %}
 
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -25,34 +23,24 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="/">Home</a></li>
+            <li><a href="/">Home</a></li>
             <li><a href="/about">About</a></li>
-            {#
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
-                <li class="divider"></li>
-                <li class="dropdown-header">Nav header</li>
-                <li><a href="#">Separated link</a></li>
-                <li><a href="#">One more separated link</a></li>
-              </ul>
-            </li>
-            #}
+            {% if user.is_admin %}
+              <li><a href="/addmission">Add mission</a></li>
+            {% endif %}
           </ul>
 
           <div class="navbar-form navbar-right " style="color:#FFFFFF; font-size:14px;"  >
             {% if user %}
                 {% if user.img_url %}
-                  <img src="{{user.img_url}}" width="32"/>
+                  <a href="/user/{{user.id}}" ><img src="{{user.img_url}}" width="32"/></a>
                 {% endif %}
                 <span>{{user.alias }}</span>
               <a href="/logout" ><button class="btn btn-default">Logout</button></a>
             {% else %}
               <span>Login with</span>
-              <a href="/login/g/{{url_quote(path)[1:]}}" ><img  width="32" src="{{cdn}}/img/g-icon.png" /></a>
+              <a href="/login/g/{{url_quote(path)[1:]}}"  ><img  width="32" src="{{cdn}}/img/g-icon.png" /></a>
+              <a href="/login/fb/{{url_quote(path)[1:]}}" ><img  width="34" src="{{cdn}}/img/fb-icon.png" /></a>
             {% endif %}
 
           </div>
