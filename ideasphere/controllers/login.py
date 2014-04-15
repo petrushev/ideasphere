@@ -10,9 +10,7 @@ from ideasphere.db.models import User
 
 G = {
     'client_id': environ['G_CLIENTID'],
-    'client_secret': environ['G_SECRET'],
-    'token_url': 'https://accounts.google.com/o/oauth2/auth',
-    'access_url': 'https://accounts.google.com/o/oauth2/token'
+    'client_secret': environ['G_SECRET']
 }
 
 FB = {
@@ -33,7 +31,7 @@ def g_request(request, original_url):
                                'state': original_url,
                                'access_type': 'online'})
     # redirects to 'login with google+' page
-    return redirect(G['token_url'] + '?' + query_string)
+    return redirect('https://accounts.google.com/o/oauth2/auth?' + query_string)
 
 def g_callback(request):
     # parse the original url from the google+ redirect state param
@@ -41,7 +39,7 @@ def g_callback(request):
     code = request.args['code']
 
     # authenticate the passed code
-    q = requests.post(G['access_url'],
+    q = requests.post('https://accounts.google.com/o/oauth2/token',
                       data = {'code': code,
                               'client_id': G['client_id'],
                               'client_secret': G['client_secret'],
