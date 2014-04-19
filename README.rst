@@ -7,6 +7,9 @@ Colaborative solutions for 3D printing in space mission problems
 
 Staging on OpenShift: https://ideasphere-petrushev.rhcloud.com
 
+This project won Macedonia's NASA SpaceApss Challenge 2014!
+
+
 Requirements
 ------------
 
