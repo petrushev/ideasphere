@@ -7,6 +7,26 @@
 {% block container %}
     <div class="panel panel-success">
         <div class="panel-heading">
+          <h2 class="panel-title">Recent problems</h2>
+        </div>
+        <div class="panel-body">
+          <div class="row" >
+          {% for p in problems %}
+            <div class="col-lg-4" >
+              <h3><a href="/problem/{{p.id}}" >{{p.title|e}}</a></h3>
+              <div>
+                mission: {{p.mission.title|e}} <br/>
+                {{p.description|truncate(320, False, '...')|e}}
+                <a href="/problem/{{p.id}}" >more</a>
+              </div>
+            </div>
+          {% endfor %}
+          </div>
+        </div>
+    </div>
+
+    <div class="panel panel-success">
+        <div class="panel-heading">
           <h2 class="panel-title">Missions</h2>
         </div>
         <div class="panel-body">
