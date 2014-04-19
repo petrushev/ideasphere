@@ -18,11 +18,14 @@ routes = [
     Rule('/mission/<int:mission_id>/addproblem', endpoint=admin.add_problem, methods=['GET']),
     Rule('/addproblem', endpoint=admin.save_problem, methods=['POST']),
     Rule('/problem/<int:problem_id>/submit', endpoint=user.submit_form, methods=['GET']),
+    Rule('/problem/<int:problem_id>', endpoint=user.submit_form, methods=['GET']),
     Rule('/submit', endpoint=user.save_proposal, methods=['POST']),
     Rule('/proposal/<int:proposal_id>', endpoint=mission.proposal, methods=['GET']),
     Rule('/vote/<int:proposal_id>/<int:vote_value>', endpoint=user.vote, methods=['GET']),
     Rule('/user/postcomment', endpoint=user.post_comment, methods=['POST']),
-    Rule('/user/<int:user_id>', endpoint=user.profile, methods=['GET'])
+    Rule('/user/<int:user_id>', endpoint=user.profile, methods=['GET']),
+    Rule('/about', endpoint=index.about_us, methods=['GET']),
+    Rule('/recentproblems', endpoint=mission.recent_problems, methods=['GET'])
 ]
 
 url_map = Map(routes, strict_slashes = False)

@@ -1,4 +1,4 @@
-from ideasphere.db.models import Mission, Proposal, Vote
+from ideasphere.db.models import Mission, Proposal, Vote, Problem
 from sqlalchemy.orm.exc import NoResultFound
 
 def show(request, mission_id):
@@ -36,3 +36,7 @@ def proposal(request, proposal_id):
     view = {'problem': problem, 'proposal': proposal, 'vote': vote,
             'img64': img64, 'model': model}
     return view, 'proposal.phtml'
+
+def recent_problems(request):
+    problems = request.session.query(Problem).order_by(Problem.created.desc()).all()
+    return {'problems': problems}, 'recentproblems.phtml'

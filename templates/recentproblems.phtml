@@ -1,0 +1,24 @@
+{% extends 'default.phtml' %}
+
+{% block container %}
+    <div class="panel panel-success">
+        <div class="panel-heading">
+          <h2 class="panel-title">Recent problems</h2>
+        </div>
+
+        <div class="panel-body">
+           <div >
+           {% for p in problems %}
+             <div>
+               <a href="/problem/{{p.id}}/submit" ><b>{{p.title|e}}</b></a> <br/>
+               mission: {{p.mission.title|e}} <br/>
+               (since: {{p.created.strftime("%B %d, %Y")}}) <br/>
+               {{p.description|e}} <br/>
+               posted proposals: {{p.proposals|count}}
+             </div>
+           {% endfor %}
+           </div>
+        </div>
+
+    </div>
+{% endblock %}
