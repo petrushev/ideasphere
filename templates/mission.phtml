@@ -1,5 +1,7 @@
 {% extends 'default.phtml' %}
 
+{% block title %}{{mission.title|e}} - mission - {{super() }}{% endblock %}
+
 {% block container %}
     <div class="panel panel-success">
         <div class="panel-heading">

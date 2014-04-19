@@ -1,5 +1,7 @@
 {% extends 'default.phtml' %}
 
+{% block title %}{{show_user.alias|e}} - {{super() }}{% endblock %}
+
 {% block container %}
     <div class="panel panel-success">
 	    <div class="panel-heading">
