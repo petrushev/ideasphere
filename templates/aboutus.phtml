@@ -1,0 +1,33 @@
+{% extends 'default.phtml' %}
+
+  {% block head_rest %}
+    <meta name="google-site-verification" content="{{google_site_verification}}" />
+  {% endblock %}
+
+{% block container %}
+    <div class="panel panel-success">
+        <div class="panel-heading">
+          <h2 class="panel-title">About us</h2>
+        </div>
+        <div class="panel-body">
+          <b>What is IDEASPHERE?</b> <br/>
+          It is a colaborative science hub, providing crowdsource solutions for various space mission. <br/>
+          This project won in Macedonia's NASA SpaceApps Challenge 2014!
+          
+          <br/><br/>
+          <b>How does it work?</b> <br/>
+          The space missions administration can post information about their missions and various problems 
+          that occur, and those appear on IDEASPHERE's home page. Then, enthusiasts from all over the world
+          can post solutions for the problems, communicate with the mission, and vote on other people's
+          solutions. The solution may also include a 3D model if it is a 3D printing solution.
+          
+          <br><br/>
+          <b>How is it moderated?</b> <br/>
+          The mission administration have specific 'badge' whick provides them with the possibility to
+          post missions and problems. <br/><br/>
+          The part with the solutions is completely community moderated, i.e. other people can upvote and 
+          downvote on solutions and also flag them for content that is inappropriate.
+          
+        </div>
+    </div>
+{% endblock %}
