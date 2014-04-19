@@ -22,25 +22,23 @@ mappers, tables, Session = reflect(engine, models)
 mappers['Mission'].add_properties({
     'problems': relationship(models.Problem,
                              order_by=models.Problem.created.desc(),
-                             backref='mission')})
+                             backref=backref('mission', lazy='joined'))})
 
 mappers['Problem'].add_properties({
     'proposals': relationship(models.Proposal,
                               order_by=models.Proposal.submited.desc(),
-                              backref='problem')})
+                              backref=backref('problem', lazy='joined'))})
 
 mappers['Proposal'].add_properties({
     'submiter': relationship(models.User, lazy='joined',
                              backref=backref('proposals',
                                              order_by=models.Proposal.submited.desc(),
-                                             lazy='dynamic'))
-})
+                                             lazy='dynamic'))})
 
 mappers['Vote'].add_properties({
     'voter': relationship(models.User, lazy='joined'),
     'proposal': relationship(models.Proposal, lazy='joined',
-                             backref='votes')
-})
+                             backref=backref('votes', lazy='joined'))})
 
 mappers['Comment'].add_properties({
     'user': relationship(models.User, lazy='joined')
