@@ -32,9 +32,10 @@
               posted on {{proposal.submited.strftime('%B %d, %Y') }} <br/>
 
             {{proposal.description|e}} <br/>
-
+              {% if img64 %}
               <img  src="data:image/png;base64,{{img64}}"
                   class="ui-resizable" style="width: 400px;" />
+              {% endif %}
 
               {% if user %}
                 {# voting part #}
